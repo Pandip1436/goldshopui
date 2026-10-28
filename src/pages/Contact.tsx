@@ -57,12 +57,6 @@ export default function Contact() {
 
       <section aria-labelledby="contact-title" className="relative overflow-hidden bg-ivory">
         <LotusMark className="pointer-events-none absolute -left-16 top-1/3 w-72 text-gold opacity-[0.07]" />
-        {image && (
-          // wide screens: the photo bleeds off the top-right corner and fades into the page
-          <div aria-hidden className="absolute right-0 top-0 hidden h-[66%] w-[36%] [mask-composite:intersect] [mask-image:linear-gradient(to_right,transparent,black_20%),linear-gradient(to_bottom,black_70%,transparent)] xl:block">
-            <Img image={image} priority sizes="36vw" width={1600} className="size-full object-cover object-[60%_30%]" />
-          </div>
-        )}
 
         <div className="container-page relative grid grid-cols-[minmax(0,1fr)] gap-8 pb-14 pt-6 md:pt-8 lg:grid-cols-2 xl:grid-cols-12 xl:gap-6 xl:pb-16">
           {/* heading and the ways to reach us */}
@@ -146,14 +140,15 @@ export default function Contact() {
             </div>
           </Reveal>
 
-          {/* the showroom: under the photo on wide screens, beside it below that */}
-          {address && (
-            <div className="grid gap-5 md:grid-cols-2 lg:col-span-2 xl:col-span-4 xl:flex xl:flex-col xl:justify-end">
+          {/* the storefront photo, always whole (never cropped), with the showroom under it on wide screens and beside it below that */}
+          {(image || address) && (
+            <div className="grid gap-5 md:grid-cols-2 md:items-start lg:col-span-2 xl:col-span-4 xl:flex xl:flex-col xl:items-stretch xl:pt-24">
               {image && (
-                <div className="h-64 overflow-hidden rounded-2xl sm:h-80 md:h-auto xl:hidden">
-                  <Img image={image} sizes="(min-width: 768px) 50vw, 100vw" width={1600} className="size-full object-cover object-[60%_30%]" />
+                <div className="overflow-hidden rounded-2xl border border-line/70 shadow-[0_30px_60px_-40px_rgba(63,18,21,.55)]">
+                  <Img image={image} priority sizes="(min-width: 1280px) 34vw, (min-width: 768px) 50vw, 100vw" width={1600} className="block h-auto w-full" />
                 </div>
               )}
+              {address && (
               <Reveal delay={0.08}>
                 <section aria-labelledby="showroom-title" className={cn(card, 'grid gap-5 rounded-2xl bg-paper/95 p-5 backdrop-blur-sm sm:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] sm:p-6 md:grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] xl:grid-cols-1 2xl:grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)]')}>
                   <div>
@@ -197,6 +192,7 @@ export default function Contact() {
                   </div>
                 </section>
               </Reveal>
+              )}
             </div>
           )}
         </div>
