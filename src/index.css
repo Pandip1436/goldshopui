@@ -1,0 +1,467 @@
+@import 'tailwindcss';
+
+/* ----------------------------------------------------------------------------
+   Design tokens
+   Warm ivory paper, ink-brown text, antique gold accents and a deep kumkum maroon
+   for bands. Gold is used sparingly: for hairlines, small marks and emphasis.
+---------------------------------------------------------------------------- */
+@theme {
+  --color-ivory: #f7f1e6;
+  --color-paper: #fcf9f3;
+  --color-sand: #efe6d6;
+  --color-sand-2: #e6dac5;
+  --color-line: #e0d3bd;
+  --color-line-strong: #cbb999;
+  --color-ink: #1e1813;
+  --color-ink-2: #3a3029;
+  --color-muted: #6c6054;
+  --color-subtle: #8c7f70;
+  --color-gold: #a57a2c;
+  --color-gold-deep: #7a5716;
+  --color-gold-soft: #d9b872;
+  --color-gold-pale: #f1e2bd;
+  --color-maroon: #3f1215;
+  --color-maroon-2: #561b1f;
+  --color-maroon-3: #6e2a2c;
+  --color-success: #2f6b4f;
+  --color-success-bg: #e5efe7;
+  --color-danger: #a3342b;
+  --color-danger-bg: #f6e3df;
+  --color-warn: #8a5a00;
+  --color-warn-bg: #f7ead0;
+
+  /* Admin panel: near-white canvas, white cards on warm hairlines, wine for the active state. */
+  --color-canvas: #f9f8f6;
+  --color-hairline: #ece7df;
+  --color-field: #e2dcd2;
+  --color-cream: #fcf2df;
+  --color-cream-2: #fdfaf3;
+  --color-wine: #5f0a1d;
+  --color-wine-2: #7a1428;
+  --color-alert: #a3172a;
+
+  --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Cormorant Garamond', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1rem;
+
+  --radius-xs: 2px;
+
+  --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-shimmer: shimmer 1.6s ease-in-out infinite;
+  @keyframes shimmer {
+    0% { background-position: -150% 0; }
+    100% { background-position: 250% 0; }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: 7rem;
+  }
+  body {
+    background: var(--color-ivory);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01', 'cv11';
+    /* Figures that sit on the line, so prices read evenly in the serif as well as the sans. */
+    font-variant-numeric: lining-nums;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection {
+    background: var(--color-gold-pale);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+  }
+
+  /* Checkboxes and radio buttons in the store's style rather than the browser's. */
+  input[type='checkbox'],
+  input[type='radio'] {
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    flex-shrink: 0;
+    width: 1.125rem;
+    height: 1.125rem;
+    margin: 0;
+    border: 1.5px solid var(--color-line-strong);
+    background: #fff;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  }
+  input[type='checkbox'] {
+    border-radius: 4px;
+  }
+  input[type='radio'] {
+    border-radius: 9999px;
+  }
+  input[type='checkbox']:hover,
+  input[type='radio']:hover {
+    border-color: var(--color-gold);
+  }
+  input[type='checkbox']:checked {
+    background: var(--color-maroon);
+    border-color: var(--color-maroon);
+  }
+  input[type='checkbox']:checked::after {
+    content: '';
+    width: 0.55rem;
+    height: 0.3rem;
+    margin-top: -0.12rem;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: rotate(-45deg);
+  }
+  input[type='radio']:checked {
+    border-color: var(--color-maroon);
+  }
+  input[type='radio']:checked::after {
+    content: '';
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 9999px;
+    background: var(--color-maroon);
+  }
+  input[type='checkbox']:focus-visible,
+  input[type='radio']:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-gold) 35%, transparent);
+  }
+  input[type='checkbox']:disabled,
+  input[type='radio']:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  input, select, textarea, button {
+    font: inherit;
+  }
+  img {
+    color: transparent;
+  }
+  [data-ssr-head] {
+    display: none;
+  }
+}
+
+/* Page container: a calm, wide measure with generous gutters */
+@utility container-page {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 90rem;
+  padding-inline: 1rem;
+  @media (width >= 40rem) {
+    padding-inline: 1.5rem;
+  }
+  @media (width >= 64rem) {
+    padding-inline: 2.5rem;
+  }
+}
+
+/* A row of call-to-action buttons. On phones each button takes the full width, so a pair never wraps into an uneven stack. */
+/* Checkbox on a maroon background: an ivory outline that fills gold when ticked. */
+@utility check-on-dark {
+  background: transparent;
+  border-color: color-mix(in srgb, var(--color-ivory) 55%, transparent);
+  &:checked {
+    background: var(--color-gold-soft);
+    border-color: var(--color-gold-soft);
+  }
+  &:checked::after {
+    border-color: var(--color-maroon);
+  }
+}
+
+@utility cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  @media (width < 40rem) {
+    /* Span the container even inside centred or start-aligned columns, which would otherwise shrink the row to its widest button. */
+    align-self: stretch;
+    width: 100%;
+    & > * {
+      flex: 1 1 100%;
+      justify-content: center;
+    }
+  }
+}
+
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  line-height: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-gold-deep);
+}
+
+@utility display-xl {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.75rem, 1.6rem + 4.6vw, 6rem);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+}
+
+@utility display-lg {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.25rem, 1.5rem + 2.8vw, 4rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+}
+
+@utility display-md {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.005em;
+}
+
+@utility display-sm {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+  line-height: 1.15;
+}
+
+/* The temple-window arch used to frame imagery across the site */
+/* Oversized radii are scaled down proportionally, which yields a true semicircle at any aspect ratio. */
+@utility arch {
+  border-radius: 999px 999px 0 0;
+}
+@utility arch-soft {
+  border-top-left-radius: 50% 28%;
+  border-top-right-radius: 50% 28%;
+}
+
+@utility hairline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-line-strong) 15%, var(--color-line-strong) 85%, transparent);
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+@utility skeleton {
+  background: linear-gradient(90deg, var(--color-sand) 0%, var(--color-paper) 50%, var(--color-sand) 100%);
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Long-form content from the CMS (policies, journal) */
+@layer components {
+  .prose-store {
+    color: var(--color-ink-2);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    max-width: 44rem;
+  }
+  .prose-store > * + * {
+    margin-top: 1.1em;
+  }
+  .prose-store h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.75rem;
+    line-height: 1.2;
+    color: var(--color-ink);
+    margin-top: 2em;
+  }
+  .prose-store h3 {
+    font-weight: 700;
+    font-size: 1.0625rem;
+    color: var(--color-ink);
+    margin-top: 1.6em;
+  }
+  .prose-store a {
+    color: var(--color-gold-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .prose-store strong {
+    color: var(--color-ink);
+    font-weight: 650;
+  }
+  .prose-store ul,
+  .prose-store ol {
+    padding-left: 1.25rem;
+  }
+  .prose-store ul {
+    list-style: none;
+  }
+  .prose-store ul > li {
+    position: relative;
+  }
+  .prose-store ul > li::before {
+    content: '';
+    position: absolute;
+    left: -1.05rem;
+    top: 0.72em;
+    width: 5px;
+    height: 5px;
+    transform: rotate(45deg);
+    background: var(--color-gold);
+  }
+  .prose-store ol {
+    list-style: decimal;
+  }
+  .prose-store li + li {
+    margin-top: 0.4em;
+  }
+  .prose-store blockquote {
+    border-left: 2px solid var(--color-gold);
+    background: var(--color-sand);
+    padding: 0.9rem 1.1rem;
+    font-size: 0.95rem;
+    color: var(--color-ink-2);
+  }
+  .prose-store table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    display: block;
+    overflow-x: auto;
+  }
+  .prose-store th,
+  .prose-store td {
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--color-line);
+    white-space: nowrap;
+  }
+  .prose-store th {
+    font-weight: 650;
+    color: var(--color-ink);
+    background: var(--color-sand);
+  }
+}
+
+@keyframes drawer-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Loaders: the lotus outline draws itself, holds, then undraws (paths use a 100-unit dash). */
+@keyframes lotus-draw {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  45%,
+  70% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -100;
+  }
+}
+
+@keyframes shimmer-sweep {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(260%);
+  }
+}
+
+/* The in-page loader's mark: settles in, then a soft gold glint passes over it (as on the opening screen). */
+@keyframes logo-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes logo-shine {
+  0% {
+    background-position: 130% 0;
+  }
+  60%,
+  100% {
+    background-position: -30% 0;
+  }
+}
+
+/* The phone rate ticker: two copies side by side, so sliding one width along loops seamlessly. */
+@keyframes rate-ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* The page-change bar races most of the way, then creeps until the page arrives. */
+@keyframes route-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(0.92);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "types": ["vite/client"],
+    "strict": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    // The code shared with the API: ../shared inside the full project, else the copy in ./shared
+    // (scripts/sync-shared.mjs). Same lookup as resolve.alias in vite.config.ts.
+    "paths": {
+      "@goldshop/shared": ["../shared/src/index.ts", "./shared/src/index.ts"]
+    }
+  },
+  "include": ["src", "vite.config.ts"]
+}

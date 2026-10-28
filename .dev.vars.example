@@ -1,0 +1,8 @@
+# Copy to .dev.vars (never committed) for `npx wrangler pages dev dist`.
+# On Cloudflare Pages set the same two in Settings → Variables and Secrets.
+
+# The API's address, no trailing slash.
+API_ORIGIN=https://your-api.onrender.com
+
+# Exactly the same value as PROXY_SECRET on the API.
+PROXY_SECRET=
