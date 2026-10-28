@@ -1,6 +1,6 @@
-# Vijay Jewellers — storefront and admin
+# Iniya Jewellers — storefront and admin
 
-React 19 + Vite + Tailwind storefront and admin panel for the Vijay Jewellers online store. The API lives
+React 19 + Vite + Tailwind storefront and admin panel for the Iniya Jewellers online store. The API lives
 in its own repository (`goldshop`) and runs separately (Render / Cloud Run).
 
 On Cloudflare Pages, `functions/[[path]].ts` forwards `/api/*`, `/uploads/*`, `/sitemap.xml` and
